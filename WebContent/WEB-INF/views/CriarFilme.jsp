@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -33,7 +32,6 @@
                     </select>
                 </div>
                 <div class="form-group col-md-8">
-                <form:errors path="local.titulo" cssStyle="color:red" />
                     <label for="titulo">Título</label>
                     <input type="text" class="form-control" name="titulo" id="titulo" required maxlength="100" placeholder="nome do filme">
                 </div>
@@ -52,7 +50,7 @@
 
                 <div class="form-group col-md-4">
                     <label for="dataLancamento">Lançamento</label>
-                    <input type="date" class="form-control" name="dataLancamento" id="dataLancamento">
+                    <input type="text" class="form-control" name="dataLancamento" id="dataLancamento" placeholder="formato dd/mm/yyyy">
                 </div>
             </div>
             <div class="row">
@@ -77,5 +75,4 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </body>
-
 </html>
