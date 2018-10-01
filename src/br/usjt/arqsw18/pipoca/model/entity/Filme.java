@@ -1,25 +1,40 @@
 package br.usjt.arqsw18.pipoca.model.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import javax.validation.constraints.Min;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class Filme {
-	@NotNull 
-	@Min(value=1)
+import br.usjt.arqsw18.pipoca.model.entity.Filme;
+
+@Entity
+@Table(name="filme")
+public class Filme implements Serializable {
+	
+	@Id
+	@GeneratedValue
 	private int id;
-	@NotNull
-	@Size(min=2, max=100, message="Tamanho entre 2 e 100 caracteres")
+	
+	@Size(max=128, message="{max 128}") 
 	private String titulo;
-	@NotNull
-	@Size(min=20, max=4000, message="Tamanho entre 20 e 4000 caracteres")
+	@Size(max=255, message="{max 255}") 
 	private String descricao;
+	
+	@Size(min=1, max=100, message="valor entre 1 e 100") 
 	private double popularidade;
+		
+	@Temporal(TemporalType.DATE)
 	private Date dataLancamento;
 	private String posterPath;
 	private String diretor;
+	@NotNull
 	private Genero genero;
 	
 	public int getId() {
