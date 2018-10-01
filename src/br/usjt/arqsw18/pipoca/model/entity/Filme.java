@@ -2,9 +2,19 @@ package br.usjt.arqsw18.pipoca.model.entity;
 
 import java.util.Date;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Filme {
+	@NotNull 
+	@Min(value=1)
 	private int id;
+	@NotNull
+	@Size(min=2, max=100, message="Tamanho entre 2 e 100 caracteres")
 	private String titulo;
+	@NotNull
+	@Size(min=20, max=4000, message="Tamanho entre 20 e 4000 caracteres")
 	private String descricao;
 	private double popularidade;
 	private Date dataLancamento;
