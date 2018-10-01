@@ -1,38 +1,30 @@
 package br.usjt.arqsw18.pipoca.model.dao;
 
-import java.sql.PreparedStatement;
-import org.springframework.stereotype.Component;
+import java.io.IOException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
 
 import br.usjt.arqsw18.pipoca.model.entity.Usuario;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-@Component
+@Repository
 public class UsuarioDAO {
-
-public Usuario autenticar(Usuario usuario) throws IOException {
+	@PersistenceContext
+	EntityManager manager;
+	
+	public boolean validarUsuario(Usuario usuario) throws IOException{
+		String jpql = "select u from Usuario u where u.username = :user and u.password = :pass";
+		Query query = manager.createQuery(jpql);
+		query.setParameter("user", usuario.getUsername());
+		query.setParameter("pass", usuario.getPassword());
+		List<Usuario> result = query.getResultList();
+		return (result != null && result.size() == 1);
 		
-		String sql = "select * from usuario where username = ? and password = ?";
-		try(Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement pst = conn.prepareStatement(sql);){	
-				pst.setString (1, usuario.getUserName());
-				pst.setString (2, usuario.getPassword());
-			
-				try(ResultSet rs = pst.executeQuery();){
-				
-					if(rs.next()) {
-						usuario.setId(rs.getInt("id"));
-						return usuario;
-					}else {
-						return null;
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new IOException(e);
-			}
 	}
+	
+	
 }

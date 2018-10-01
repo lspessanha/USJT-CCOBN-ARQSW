@@ -1,33 +1,24 @@
 package br.usjt.arqsw18.pipoca.model.entity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
-import br.usjt.arqsw18.pipoca.model.entity.Filme;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="genero")
-public class Genero implements Serializable {
-	
+public class Genero {
 	@Id
-	@GeneratedValue
+	@NotNull
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	
+	@NotNull
+	@Size(max=60)
 	private String nome;
 	private ArrayList<Filme> filmes;
-	
-	public ArrayList<Filme> getFilmes() {
-		return filmes;
-	}
-	public void setFilmes(ArrayList<Filme> filmes) {
-		this.filmes = filmes;
-	}
 	public int getId() {
 		return id;
 	}
@@ -39,6 +30,10 @@ public class Genero implements Serializable {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public void setFilmes(ArrayList<Filme> filmes) {
+		this.filmes = filmes;
 	}
 	
 	@Override

@@ -1,25 +1,23 @@
 package br.usjt.arqsw18.pipoca.model.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.io.IOException;
 
-import br.usjt.arqsw18.pipoca.model.entity.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import br.usjt.arqsw18.pipoca.model.dao.UsuarioDAO;
+import br.usjt.arqsw18.pipoca.model.entity.Usuario;
 
 @Service
 public class UsuarioService {
-	
-	@Autowired
 	private UsuarioDAO dao;
 	
-	public UsuarioService() {
-		this.dao = new UsuarioDAO();
+	@Autowired
+	public UsuarioService(UsuarioDAO dao){
+		this.dao = dao;
 	}
 	
-	public Usuario autenticar(Usuario usuario) throws IOException {
-		usuario =  dao.autenticar(usuario);
-		return usuario;
+	public boolean validarUsuario(Usuario usuario) throws IOException{
+		return dao.validarUsuario(usuario);
 	}
-	
 }

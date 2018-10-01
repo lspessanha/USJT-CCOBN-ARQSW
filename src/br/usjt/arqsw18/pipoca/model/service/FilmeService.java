@@ -1,10 +1,11 @@
 package br.usjt.arqsw18.pipoca.model.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,41 +15,47 @@ import br.usjt.arqsw18.pipoca.model.entity.Filme;
 
 @Service
 public class FilmeService {
-	
-	@Autowired
 	private FilmeDAO dao;
 	
+	@Autowired
+	public FilmeService(FilmeDAO fdao) {
+		dao = fdao;
+	}
 	
 	public Filme buscarFilme(int id) throws IOException{
 		return dao.buscarFilme(id);
 	}
 	
-	public void inserirFilme(Filme filme) throws IOException {
-		dao.inserirFilme(filme);
+	@Transactional
+	public Filme inserirFilme(Filme filme) throws IOException {
+		int id = dao.inserirFilme(filme);
+		filme.setId(id);
+		return filme;
 	}
 	
-	public ArrayList<Filme> listarFilmes(String chave) throws IOException{
+	@Transactional
+	public void excluirFilme(Filme filme) throws IOException {
+		dao.removerFilme(filme);
+	}
+	
+	@Transactional
+	public void atualizarFilme(Filme filme) throws IOException {
+		dao.atualizarFilme(filme);
+	}
+
+	public List<Filme> listarFilmes(String chave) throws IOException{
 		return dao.listarFilmes(chave);
 	}
 
 	public List<Filme> listarFilmes() throws IOException{
 		return dao.listarFilmes();
 	}
-
-	public void updateFilme(Filme filme) throws IOException {
-		dao.updateFilme(filme);
-	}
-
-	public void deleteFilme(Filme filme) throws IOException {
-		dao.deletaFilme(filme);;
-		
+	
+	public List<Filme> listarPopulares(double d,double e) throws IOException{
+		return dao.listarPopulares(d, e);
 	}
 	
-	public ArrayList<Filme> listarPopulares(Integer inicio,Integer fim) throws IOException{
-		return dao.listarPopulares(inicio, fim);
-	}
-	
-	public ArrayList<Filme> porData(String chave,Integer periodo) throws IOException{
+	public List<Filme> porData(String chave,Integer periodo) throws IOException{
 		Date data = new Date();
 		Calendar calendar = Calendar.getInstance();
 		if(chave.equals("ano")) {
@@ -63,6 +70,21 @@ public class FilmeService {
 		data = calendar.getTime();
 		System.out.println(data);
 		return dao.porData(data); 
+	}
+	
+	@Transactional
+	public Filme updateFilme(Filme filme) throws IOException {
+		return dao.updateFilme(filme);
+	}
+	
+	@Transactional
+	public void deleteFilme(Filme filme) throws IOException {
+		dao.deletaFilme(filme);
+	}
+
+	public void excluirFilme(Integer id) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
