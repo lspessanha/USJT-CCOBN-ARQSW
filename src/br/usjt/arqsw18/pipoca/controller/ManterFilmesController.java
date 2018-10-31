@@ -3,15 +3,19 @@ package br.usjt.arqsw18.pipoca.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.usjt.arqsw18.pipoca.model.entity.Filme;
@@ -26,6 +30,8 @@ public class ManterFilmesController {
 	private FilmeService fService;
 	@Autowired
 	private GeneroService gService;
+	@Autowired
+	private ServletContext servletContext;
 
 	@RequestMapping("index")
 	public String iniciar() {
@@ -46,7 +52,8 @@ public class ManterFilmesController {
 	}
 
 	@RequestMapping("/criar_filme")
-	public String criarFilme(@Valid Filme filme, BindingResult erros, Model model) {
+	public String criarFilme(@Valid Filme filme, BindingResult erros, Model model, 
+			@RequestParam("posterPath") MultipartFile file) {
 		try {
 			if (!erros.hasErrors()) {
 				Genero genero = new Genero();
@@ -55,9 +62,10 @@ public class ManterFilmesController {
 				filme.setGenero(genero);
 
 				filme = fService.inserirFilme(filme);
-
+				System.out.println("### FILE:");
+				System.out.println(file);
+				fService.gravarImagem(servletContext, filme, file);
 				model.addAttribute("filme", filme);
-
 				return "VisualizarFilme";
 			} else {
 				return "CriarFilme";
@@ -159,7 +167,8 @@ public class ManterFilmesController {
 	}
 
 	@RequestMapping("/atualizar_filme")
-	public String gravarAtualizacaoFilme(@Valid Filme filme, BindingResult erros, Model model, HttpSession session) {
+	public String gravarAtualizacaoFilme(@Valid Filme filme, BindingResult erros, Model model, HttpSession session, 
+			@RequestParam("posterPath") MultipartFile file) {
 		try {
 			if (!erros.hasErrors()) {
 				Genero genero = new Genero();
@@ -168,6 +177,7 @@ public class ManterFilmesController {
 				filme.setGenero(genero);
 
 				fService.atualizarFilme(filme);
+				fService.gravarImagem(servletContext, filme, file);
 
 				model.addAttribute("filme", filme);
 				List<Filme> filmes = (List<Filme>) session.getAttribute("lista");
@@ -220,5 +230,38 @@ public class ManterFilmesController {
 		andView.addObject("filmes5",filmes5);
 		return andView;
 	}
+	/*
+	@RequestMapping("/criar_filme")
+	public String inclusao(@Valid Filme filme, BindingResult result, Model model,
+			@RequestParam("file") MultipartFile file) {
+		try {
+			if (result.hasErrors()) {
+				List<Filme> filmes = fService.listarFilmes();
+				model.addAttribute("filmes", filmes);
+				return "local/localcriar";
+			}
+			fService.inserirFilme(filme);
+			fService.gravarImagem(servletContext, filme, file);
+			return "redirect:listar_filmes";
+		} catch (IOException e) {
+			e.printStackTrace();
+			model.addAttribute("erro", e);
+		}
+		return "erro";
+	}
+
+	@RequestMapping("/atualizar_filme")
+	public String atualizar(Filme filme, Model model, @RequestParam("file") MultipartFile file) {
+		try {
+			fService.atualizarFilme(filme);
+			fService.gravarImagem(servletContext, filme, file);
+			return "redirect:listar_filmes";
+		} catch (IOException e) {
+			e.printStackTrace();
+			model.addAttribute("erro", e);
+		}
+		return "erro";
+	}
+	*/
 
 }

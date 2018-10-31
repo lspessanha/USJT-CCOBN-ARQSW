@@ -1,14 +1,21 @@
 package br.usjt.arqsw18.pipoca.model.service;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.usjt.arqsw18.pipoca.model.dao.FilmeDAO;
 import br.usjt.arqsw18.pipoca.model.entity.Filme;
@@ -85,6 +92,23 @@ public class FilmeService {
 	public void excluirFilme(Integer id) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void gravarImagem(ServletContext servletContext, Filme filme, MultipartFile file) throws IOException {
+		if (!file.isEmpty()) {
+			BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+			String path = servletContext.getRealPath(servletContext.getContextPath());
+			path = path.substring(0, path.lastIndexOf('/'));
+			String nomeArquivo = "img"+filme.getId()+".jpg";
+			filme.setPosterPath(nomeArquivo);
+			atualizarFilme(filme);
+			File destination = new File(path + File.separatorChar + "img" + File.separatorChar + "nomeArquivo");
+			
+			if(destination.exists()) {
+				destination.delete();
+			}
+			ImageIO.write(src, "jpg", destination);
+		}
 	}
 
 }

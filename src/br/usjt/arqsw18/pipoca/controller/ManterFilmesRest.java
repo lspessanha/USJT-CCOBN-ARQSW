@@ -79,16 +79,14 @@ public class ManterFilmesRest {
 			return null;
 	}
 	
-	
-	@RequestMapping(method=RequestMethod.POST,value="rest/filmes")
+	@RequestMapping(method=RequestMethod.POST, value="rest/filmes")
 	public ResponseEntity<Filme> criarFilme(@RequestBody Filme filme) {
 		try {
-			 filme = fService.inserirFilme(filme);
-			 return new ResponseEntity<Filme>(filme,HttpStatus.OK);
+			filme = fService.inserirFilme(filme);
+			return new ResponseEntity<Filme>(filme, HttpStatus.OK);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<Filme>(filme,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Filme>(filme, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
