@@ -52,24 +52,18 @@ public class ManterFilmesController {
 	}
 
 	@RequestMapping("/criar_filme")
-	public String criarFilme(@Valid Filme filme, BindingResult erros, Model model, 
+	public String criarFilme(Filme filme, BindingResult erros, Model model, 
 			@RequestParam("posterPath") MultipartFile file) {
 		try {
-			if (!erros.hasErrors()) {
-				Genero genero = new Genero();
-				genero.setId(filme.getGenero().getId());
-				genero.setNome(gService.buscarGenero(genero.getId()).getNome());
-				filme.setGenero(genero);
+			Genero genero = new Genero();
+			genero.setId(filme.getGenero().getId());
+			genero.setNome(gService.buscarGenero(genero.getId()).getNome());
+			filme.setGenero(genero);
 
-				filme = fService.inserirFilme(filme);
-				System.out.println("### FILE:");
-				System.out.println(file);
-				fService.gravarImagem(servletContext, filme, file);
-				model.addAttribute("filme", filme);
-				return "VisualizarFilme";
-			} else {
-				return "CriarFilme";
-			}
+			model.addAttribute("filme", filme);
+			filme = fService.inserirFilme(filme);
+			fService.gravarImagem(servletContext, filme, file);
+			return "VisualizarFilme";
 		} catch (IOException e) {
 			e.printStackTrace();
 			model.addAttribute("erro", e);

@@ -98,11 +98,11 @@ public class FilmeService {
 		if (!file.isEmpty()) {
 			BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
 			String path = servletContext.getRealPath(servletContext.getContextPath());
-			path = path.substring(0, path.lastIndexOf('/'));
+			path = path.substring(0, path.lastIndexOf('\\'));
 			String nomeArquivo = "img"+filme.getId()+".jpg";
 			filme.setPosterPath(nomeArquivo);
 			atualizarFilme(filme);
-			File destination = new File(path + File.separatorChar + "img" + File.separatorChar + "nomeArquivo");
+			File destination = new File(path + File.separatorChar + "img" + File.separatorChar + nomeArquivo);
 			
 			if(destination.exists()) {
 				destination.delete();
