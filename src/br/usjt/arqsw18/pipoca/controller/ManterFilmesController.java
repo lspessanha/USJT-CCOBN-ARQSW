@@ -1,6 +1,7 @@
 package br.usjt.arqsw18.pipoca.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -8,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +22,7 @@ import br.usjt.arqsw18.pipoca.model.entity.Filme;
 import br.usjt.arqsw18.pipoca.model.entity.Genero;
 import br.usjt.arqsw18.pipoca.model.service.FilmeService;
 import br.usjt.arqsw18.pipoca.model.service.GeneroService;
+import br.usjt.arqsw18.pipoca.model.entity.FilmeTMDb;
 
 @Transactional
 @Controller
@@ -34,7 +35,7 @@ public class ManterFilmesController {
 	private ServletContext servletContext;
 
 	@RequestMapping("index")
-	public String iniciar() {
+	public String iniciar(HttpSession session) {
 		return "index";
 	}
 
@@ -224,38 +225,21 @@ public class ManterFilmesController {
 		andView.addObject("filmes5",filmes5);
 		return andView;
 	}
-	/*
-	@RequestMapping("/criar_filme")
-	public String inclusao(@Valid Filme filme, BindingResult result, Model model,
-			@RequestParam("file") MultipartFile file) {
-		try {
-			if (result.hasErrors()) {
-				List<Filme> filmes = fService.listarFilmes();
-				model.addAttribute("filmes", filmes);
-				return "local/localcriar";
-			}
-			fService.inserirFilme(filme);
-			fService.gravarImagem(servletContext, filme, file);
-			return "redirect:listar_filmes";
-		} catch (IOException e) {
-			e.printStackTrace();
-			model.addAttribute("erro", e);
-		}
-		return "erro";
+	
+	@RequestMapping("/listar_filmes_tmdb")
+	public String listarFilmesTMDb(HttpSession session, Model model, String chave) throws IOException {
+		ArrayList<FilmeTMDb> lista;
+		lista = fService.buscaFilmesTMDb();
+		session.setAttribute("lista", lista);
+		return "ListarFilmesTMDb";
 	}
-
-	@RequestMapping("/atualizar_filme")
-	public String atualizar(Filme filme, Model model, @RequestParam("file") MultipartFile file) {
-		try {
-			fService.atualizarFilme(filme);
-			fService.gravarImagem(servletContext, filme, file);
-			return "redirect:listar_filmes";
-		} catch (IOException e) {
-			e.printStackTrace();
-			model.addAttribute("erro", e);
-		}
-		return "erro";
+	
+	@RequestMapping("/visualizar_filme_tmdb")
+	public String visualizarFilmeTMDb(Model model, @RequestParam("id") String id) throws IOException {
+		FilmeTMDb filme;
+		filme = fService.buscaFilmeTMDb(id);
+		model.addAttribute("filme", filme);
+		return "VisualizarFilmeTMDb";
 	}
-	*/
 
 }

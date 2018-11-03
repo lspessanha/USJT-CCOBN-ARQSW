@@ -26,8 +26,7 @@ public class Filme {
 	private String titulo;
 	@Size(max=4000, message="Tamanho entre 20 e 4000 caracteres")
 	private String descricao;
-	@Max(value=100)
-	@Min(value=1)
+
 	private double popularidade;
 	@Temporal(value = TemporalType.DATE)
 	private Date dataLancamento;

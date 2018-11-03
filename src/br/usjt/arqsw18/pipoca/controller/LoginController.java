@@ -30,6 +30,7 @@ public class LoginController {
 		try {
 			if(service.validarUsuario(usuario)){
 				session.setAttribute(Usuario.LOGADO, usuario);
+				session.setAttribute("username", usuario.getUsername());
 				return "index";
 			}
 		} catch (IOException e) {
@@ -42,7 +43,8 @@ public class LoginController {
 	@RequestMapping("logout")
 	public String logout(HttpSession session){
 		session.setAttribute(Usuario.LOGADO, null);
-		return "index";
+		session.setAttribute("username", null);
+		return "redirect:loginForm";
 	}
 	
 	
