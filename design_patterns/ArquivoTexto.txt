@@ -1,0 +1,2 @@
+Escreva uma classe Java chamada IOFacade que simplifique o uso dos recursos de I/O do Java
+Com métodos para abrir arquivos texto, arquivos binários e objetos
